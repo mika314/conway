@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://cells.tres" type="MeshLibrary" id=2]
+
+[sub_resource type="Environment" id=1]
+ambient_light_color = Color( 0.596078, 0.596078, 0.596078, 1 )
+
+[node name="Main" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 22.5689, 12.4725 )
+environment = SubResource( 1 )
+far = 8192.0
+
+[node name="SpotLight" type="SpotLight" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+spot_range = 1388.2
+spot_angle = 45.4886
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource( 2 )
+data = {
+"cells": PoolIntArray( 65535, 0, 0 )
+}
+__meta__ = {
+"_editor_clip_": 0
+}
+
+[node name="Spatial" type="Spatial" parent="."]

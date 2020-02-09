@@ -1,0 +1,7 @@
+*~
+/server/server.exe
+/client/.import/
+/client/Client.pck
+/client/Client.exe
+*.blend1
+.coddle/
