@@ -654,3 +654,46 @@ includes=[
 "XMLParser.hpp",
 "YSort.hpp",
 ]
+
+[[library]]
+type="file"
+name="net"
+path="../net"
+includes=[
+  "net/conn.hpp",
+  "net/server.hpp",
+  "net/rsa_key.hpp"
+]
+
+[[library]]
+type="file"
+name="sched"
+path="../sched"
+includes=[
+  "sched/sched.hpp"
+]
+
+[[library]]
+type="file"
+name="ser"
+path="../ser"
+includes=[
+  "ser/ser.hpp",
+  "ser/proto.hpp"
+]
+
+[[library]]
+type="file"
+name="proto"
+path="../proto"
+includes=[
+  "proto/proto.hpp"
+]
+
+[[library]]
+type="file"
+name="pi"
+path="../pi"
+includes=[
+  "pi/pi.hpp"
+]
