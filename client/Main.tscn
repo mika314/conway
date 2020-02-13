@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://gdexample.gdns" type="Script" id=1]
 [ext_resource path="res://cells.tres" type="MeshLibrary" id=2]
 
 [sub_resource type="Environment" id=1]
@@ -15,14 +15,13 @@ environment = SubResource( 1 )
 far = 8192.0
 
 [node name="SpotLight" type="SpotLight" parent="Camera"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 spot_range = 1388.2
 spot_angle = 45.4886
 
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource( 2 )
 data = {
-"cells": PoolIntArray( 65535, 0, 0 )
+"cells": PoolIntArray( 65535, 0, 536870912 )
 }
 __meta__ = {
 "_editor_clip_": 0
