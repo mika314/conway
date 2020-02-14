@@ -21,7 +21,7 @@ spot_angle = 45.4886
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource( 2 )
 data = {
-"cells": PoolIntArray( 65535, 0, 536870912 )
+"cells": PoolIntArray( 65535, 0, 0 )
 }
 __meta__ = {
 "_editor_clip_": 0

@@ -96,12 +96,12 @@ void GDExample::_process(float delta)
   maxX = connection->get_32();
   maxY = connection->get_32();
   auto buffer = static_cast<Array>(connection->get_data(64 * 64 / 8));
+  auto tmp = buffer[1].operator PoolByteArray();
   auto gridMap = static_cast<GridMap *>(get_node("GridMap"));
   for (int xx = 0; xx < 64; ++xx)
     for (int yy = 0; yy < 64; ++yy)
     {
-      auto tmp = buffer[1].operator Array();
-      if ((tmp[yy * 8 + xx / 8].operator unsigned() & (1 << xx % 8)) == 0)
+      if ((tmp[yy * 8 + xx / 8] & (1 << xx % 8)) == 0)
         gridMap->set_cell_item(xx, 0, yy, 0);
       else
         gridMap->set_cell_item(xx, 0, yy, 1);
