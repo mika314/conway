@@ -2,7 +2,7 @@
 type="git"
 name="gd"
 path="https://github.com/GodotNativeTools/godot-cpp"
-postClone="git submodule update --init && scons platform=windows use_mingw=yes generate_bindings=yes; mv include/core/* include/ && mv include/gen/* include/ && mv src/core/* ./ && mv src/gen/* ./ && mv godot_headers/* include/ && find . -name '*.?pp' -exec sed -i 's|^#include <core/|#include <|' {} \\;"
+postClone="git submodule update --init && sed -ie 's|json_api_file)|json_api_file); exit()|' SConstruct && scons generate_bindings=yes; mv include/core/* include/ && mv include/gen/* include/ && mv src/core/* ./ && mv src/gen/* ./ && mv godot_headers/* include/ && find . -name '*.?pp' -exec sed -i 's|^#include <core/|#include <|' {} \\;"
 incdir="include"
 includes=[
 "AABB.hpp",

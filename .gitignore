@@ -5,3 +5,6 @@
 /client/Client.exe
 *.blend1
 .coddle/
+/gdnative/gdnative.dll
+/client/gdnative.dll
+/TAGS
