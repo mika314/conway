@@ -1,18 +1,19 @@
 #pragma once
-#include <vector>
+#include <string>
 
 class OStrm
 {
 public:
-  constexpr explicit OStrm(std::vector<char> &buff) noexcept : buff(buff) {}
-  OStrm(const OStrm&) = delete;
+  OStrm() = default;
+  OStrm(const OStrm &) = delete;
   OStrm &operator=(const OStrm &) = delete;
   constexpr auto write(const char *b, size_t sz) noexcept -> void
   {
     for (; sz > 0; --sz, ++b)
       buff.push_back(*b);
   }
+  std::string &str() { return buff; }
 
 private:
-  std::vector<char> &buff;
+  std::string buff;
 };

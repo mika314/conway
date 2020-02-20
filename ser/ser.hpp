@@ -1,8 +1,10 @@
 #pragma once
+#include "is_serializable.hpp"
 #include "istrm.hpp"
 #include "ostrm.hpp"
-#include "is_serializable.hpp"
+
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -43,6 +45,15 @@ public:
 
   template <typename T>
   constexpr auto serVal(const std::unique_ptr<T> &value) -> void
+  {
+    int32_t isNull = value ? 0 : 1;
+    operator()("isNull", isNull);
+    if (value)
+      operator()("*value", *value);
+  }
+
+  template <typename T>
+  constexpr auto serVal(const std::optional<T> &value) -> void
   {
     int32_t isNull = value ? 0 : 1;
     operator()("isNull", isNull);
@@ -103,6 +114,21 @@ public:
     }
 
     value = std::make_unique<T>();
+    operator()("*value", *value);
+  }
+
+  template <typename T>
+  constexpr auto deserVal(std::optional<T> &value) -> void
+  {
+    int32_t isNull{};
+    operator()("isNull", isNull);
+    if (isNull == 1)
+    {
+      value = std::nullopt;
+      return;
+    }
+
+    value = T{};
     operator()("*value", *value);
   }
 

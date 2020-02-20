@@ -46,7 +46,7 @@ int main()
       {
         auto state = game.getState(peer.second.first, peer.second.second);
         proto::State st;
-        st.data.resize(8 * 64);
+        st.data.resize(64 * 64 / 8);
         for (int y = 0; y < 64; ++y)
           for (int x = 0; x < 64; ++x)
             if (state.data[y][x])
@@ -55,11 +55,10 @@ int main()
         st.y = peer.second.second;
         st.maxX = state.maxX;
         st.maxY = state.maxY;
-        std::vector<char> buff;
         ConwayProto proto;
-        OStrm strm{buff};
+        OStrm strm;
         proto.ser(strm, st);
-        peer.first->send(buff.data(), buff.size());
+        peer.first->send(strm.str().data(), strm.str().size());
       }
     },
     std::chrono::milliseconds{1000 / 10},

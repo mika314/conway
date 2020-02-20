@@ -230,7 +230,7 @@ namespace Net
 
   auto Conn::onRead(int nread, const char *encBuff) -> void
   {
-    if (nread == UV_EOF)
+    if (nread == UV_EOF || nread < 0)
     {
       if (onDisconn)
         onDisconn();

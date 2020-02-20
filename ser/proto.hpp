@@ -91,9 +91,8 @@ private:
 
   static auto calcMd5Hash() -> uint32_t
   {
-    std::vector<char> buff;
-    OStrm strm(buff);
+    OStrm strm;
     internal::SerAllDefCtord<Args...>{}(strm);
-    return internal::calcMd5Hash(buff.data(), buff.size());
+    return internal::calcMd5Hash(strm.str().data(), strm.str().size());
   }
 };
