@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-for bin in server gdnative; do
+for bin in server gdnative cli_client; do
     cd $bin
     echo Entering directory \`$bin\'
     coddle debug
