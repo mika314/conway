@@ -91,7 +91,7 @@ void GDExample::_process(float delta)
 
   if (time > nextTime)
   {
-    proto::ClientState state;
+    Conway::ClientState state;
     state.w = w(camera->get_translation().y);
     state.h = h(camera->get_translation().y);
     state.x = camera->get_translation().x / 2 - state.w / 2;
@@ -106,12 +106,12 @@ void GDExample::_process(float delta)
   time += delta;
 }
 
-void GDExample::operator()(const proto::ClientState &)
+void GDExample::operator()(const Conway::ClientState &)
 {
   Godot::print("Unexpected");
 }
 
-void GDExample::operator()(const proto::State &state)
+void GDExample::operator()(const Conway::State &state)
 {
   auto tmpX = state.x;
   auto tmpY = state.y;

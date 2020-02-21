@@ -30,7 +30,7 @@ static void dump(Iter, Iter)
 
 namespace Net
 {
-  namespace internal
+  namespace Internal
   {
     struct Conn
     {
@@ -38,10 +38,10 @@ namespace Net
       chacha_state chachaRecv{};
       chacha_state chachaSend{};
     };
-  } // namespace internal
+  } // namespace Internal
 
   Conn::Conn(Sched &sched, const RsaPublicKey &publicKey, const std::string &host, int port)
-    : sched(sched), internal(std::make_unique<internal::Conn>())
+    : sched(sched), internal(std::make_unique<Internal::Conn>())
   {
     importKey(publicKey.data(), publicKey.size());
     uv_tcp_init(&sched.loop, &socket);
@@ -69,7 +69,7 @@ namespace Net
   Conn::Conn(Sched &sched,
              const RsaPrivateKey &privateKey,
              std::function<int(uv_stream_t &)> &&accept)
-    : sched(sched), internal(std::make_unique<internal::Conn>())
+    : sched(sched), internal(std::make_unique<Internal::Conn>())
   {
     importKey(privateKey.data(), privateKey.size());
     uv_tcp_init(&sched.loop, &socket);

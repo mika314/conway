@@ -11,7 +11,7 @@
 class Sched;
 namespace Net
 {
-  namespace internal
+  namespace Internal
   {
     struct Conn;
   }
@@ -34,7 +34,7 @@ namespace Net
     uv_tcp_t socket{};
     uv_connect_t connect{};
     std::optional<std::array<unsigned char, 256 / 8>> key{};
-    std::unique_ptr<internal::Conn> internal{};
+    std::unique_ptr<Internal::Conn> internal{};
     std::vector<char> inBuff{};
     std::vector<char> outBuff{};
     std::vector<char> tmpBuff{};

@@ -131,7 +131,7 @@ static void MurmurHash3_x86_32(const void *key, int len, uint32_t seed, void *ou
 
 //-----------------------------------------------------------------------------
 
-namespace internal
+namespace Internal
 {
   auto calcMd5Hash(const char *data, const size_t size) -> uint32_t
   {
@@ -139,4 +139,4 @@ namespace internal
     MurmurHash3_x86_32(data, size, 0, &res);
     return res;
   }
-} // namespace internal
+} // namespace Internal

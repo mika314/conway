@@ -8,7 +8,7 @@ class Game
 public:
   Game();
   void process();
-  proto::State getState(const proto::ClientState&) const;
+  Conway::State getState(const Conway::ClientState&) const;
   int getCellsCount() const;
 
 private:

@@ -2,7 +2,7 @@
 #include <ser/proto.hpp>
 #include <ser/macro.hpp>
 
-namespace proto
+namespace Conway
 {
 
   struct State
@@ -40,6 +40,6 @@ namespace proto
     SER_DEFINE_PROPERTIES()
 #undef SER_PROPERTY_LIST
   };
-} // namespace proto
+} // namespace Conway
 
-using ConwayProto = Proto<proto::State, proto::ClientState>;
+using ConwayProto = Proto<Conway::State, Conway::ClientState>;

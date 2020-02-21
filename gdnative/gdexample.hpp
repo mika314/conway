@@ -22,8 +22,8 @@ namespace godot
 
     void _process(float delta);
 
-    void operator()(const proto::ClientState &);
-    void operator()(const proto::State &);
+    void operator()(const Conway::ClientState &);
+    void operator()(const Conway::State &);
 
   private:
     Sched sched;

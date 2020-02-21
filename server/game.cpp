@@ -68,9 +68,9 @@ void Game::process()
     std::cout << "Number of cells: " << state.size() << std::endl;
 }
 
-proto::State Game::getState(const proto::ClientState &clientState) const
+Conway::State Game::getState(const Conway::ClientState &clientState) const
 {
-  proto::State ret;
+  Conway::State ret;
   ret.maxX = maxX;
   ret.maxY = maxY;
   ret.x = clientState.x;

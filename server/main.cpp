@@ -17,17 +17,17 @@ int main()
 {
 
   Sched sched;
-  std::unordered_map<Net::Conn *, proto::ClientState> peers;
+  std::unordered_map<Net::Conn *, Conway::ClientState> peers;
   Net::Server server(sched, PrivateKey, 42069, [&peers](Net::Conn *conn) {
     std::cout << "new connection: " << conn << std::endl;
-    auto ret = peers.emplace(conn, proto::ClientState{});
+    auto ret = peers.emplace(conn, Conway::ClientState{});
     auto &peer = ret.first->second;
     conn->onRecv = [&peer](const char *buff, size_t sz) {
       ConwayProto proto;
       IStrm strm(buff, buff + sz);
       proto.deser(strm,
-                  overloaded{[&peer](const proto::ClientState &pos) { peer = pos; },
-                             [](const proto::State &) { LOG("Unexpected"); }});
+                  overloaded{[&peer](const Conway::ClientState &state) { peer = state; },
+                             [](const Conway::State &) { LOG("Unexpected"); }});
     };
     conn->onDisconn = [conn, &peers] {
       std::cout << "Peer " << conn << " is disconnected\n";

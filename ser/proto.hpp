@@ -6,7 +6,7 @@
 #include <array>
 #include <sstream>
 
-namespace internal
+namespace Internal
 {
   template <typename X, typename H, typename... T>
   struct IndexOf
@@ -43,7 +43,7 @@ namespace internal
   };
 
   auto calcMd5Hash(const char *data, const size_t size) -> uint32_t;
-} // namespace internal
+} // namespace Internal
 
 template <typename... Args>
 class Proto
@@ -52,7 +52,7 @@ public:
   template <typename Msg>
   constexpr auto ser(OStrm &strm, const Msg &msg) const -> void
   {
-    auto msgId = internal::IndexOf<Msg, Args...>::Value;
+    auto msgId = Internal::IndexOf<Msg, Args...>::Value;
     ::ser(strm, msgId);
     ::ser(strm, msg);
   }
@@ -92,7 +92,7 @@ private:
   static auto calcMd5Hash() -> uint32_t
   {
     OStrm strm;
-    internal::SerAllDefCtord<Args...>{}(strm);
-    return internal::calcMd5Hash(strm.str().data(), strm.str().size());
+    Internal::SerAllDefCtord<Args...>{}(strm);
+    return Internal::calcMd5Hash(strm.str().data(), strm.str().size());
   }
 };

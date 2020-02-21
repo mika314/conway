@@ -4,7 +4,7 @@
 #include <memory>
 #include <typeinfo>
 
-namespace internal
+namespace Internal
 {
   class Schema
   {
@@ -14,7 +14,7 @@ namespace internal
     template <typename T>
     constexpr auto operator()(const char *name, const T &value) -> void
     {
-      if constexpr (internal::IsSerializableClassV<T>)
+      if constexpr (Internal::IsSerializableClassV<T>)
       {
         strm.write(name, strlen(name));
         strm.write(":", 1);
@@ -33,7 +33,7 @@ namespace internal
     template <typename T>
     constexpr auto operator()(const char *name, const std::vector<T> &) -> void
     {
-      if constexpr (internal::IsSerializableClassV<T>)
+      if constexpr (Internal::IsSerializableClassV<T>)
       {
         strm.write(name, strlen(name));
         strm.write(":", 1);
@@ -87,7 +87,7 @@ namespace internal
     template <typename T>
     constexpr auto operator()(const char *name, const std::unique_ptr<T> &) -> void
     {
-      if constexpr (internal::IsSerializableClassV<T>)
+      if constexpr (Internal::IsSerializableClassV<T>)
       {
         strm.write(name, strlen(name));
         strm.write(":", 1);
@@ -107,13 +107,13 @@ namespace internal
   private:
     OStrm &strm;
   };
-} // namespace internal
+} // namespace Internal
 
 template <typename T>
 constexpr auto schema(OStrm &strm, const T &value) -> void
 {
-  internal::Schema s(strm);
-  if constexpr (internal::IsSerializableClassV<T>)
+  Internal::Schema s(strm);
+  if constexpr (Internal::IsSerializableClassV<T>)
   {
     strm.write("value:{\n", strlen("value:{\n"));
     value.ser(s);

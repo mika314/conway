@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 
-namespace internal
+namespace Internal
 {
   template <typename T>
   struct IsSerializableClass
@@ -21,4 +21,4 @@ namespace internal
 
   template <typename T>
   inline constexpr bool IsSerializableClassV = IsSerializableClass<T>::value;
-} // namespace internal
+} // namespace Internal
