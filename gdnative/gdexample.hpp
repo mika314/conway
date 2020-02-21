@@ -1,10 +1,9 @@
 #pragma once
 #include <Godot.hpp>
 #include <Spatial.hpp>
-#include <sched/sched.hpp>
-#include <proto/proto.hpp>
 #include <net/conn.hpp>
-
+#include <proto/proto.hpp>
+#include <sched/sched.hpp>
 
 namespace godot
 {
@@ -23,12 +22,12 @@ namespace godot
 
     void _process(float delta);
 
-    void operator()(const proto::Pos &pos);
+    void operator()(const proto::ClientState &);
     void operator()(const proto::State &);
 
   private:
     Sched sched;
-    Net::Conn conn;
+    std::unique_ptr<Net::Conn> conn;
     bool wasConnected = false;
     const float CamSpeed = 14.0f;
     int maxX = 0;
@@ -37,5 +36,7 @@ namespace godot
     float time = 0.0f;
     bool isConnected = false;
     std::vector<char> buff;
+    int w(float y) const;
+    int h(float y) const;
   };
 } // namespace godot

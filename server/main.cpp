@@ -17,18 +17,17 @@ int main()
 {
 
   Sched sched;
-  std::unordered_map<Net::Conn *, std::pair<int, int>> peers;
+  std::unordered_map<Net::Conn *, proto::ClientState> peers;
   Net::Server server(sched, PrivateKey, 42069, [&peers](Net::Conn *conn) {
     std::cout << "new connection: " << conn << std::endl;
-    auto ret = peers.emplace(conn, std::make_pair(0, 0));
+    auto ret = peers.emplace(conn, proto::ClientState{});
     auto &peer = ret.first->second;
     conn->onRecv = [&peer](const char *buff, size_t sz) {
       ConwayProto proto;
       IStrm strm(buff, buff + sz);
-      proto.deser(
-        strm,
-        overloaded{[&peer](const proto::Pos &pos) { peer = std::make_pair(pos.x, pos.y); },
-                   [](const proto::State &) { LOG("Unexpected"); }});
+      proto.deser(strm,
+                  overloaded{[&peer](const proto::ClientState &pos) { peer = pos; },
+                             [](const proto::State &) { LOG("Unexpected"); }});
     };
     conn->onDisconn = [conn, &peers] {
       std::cout << "Peer " << conn << " is disconnected\n";
@@ -44,20 +43,9 @@ int main()
     [&game, &peers]() {
       for (auto &peer : peers)
       {
-        auto state = game.getState(peer.second.first, peer.second.second);
-        proto::State st;
-        st.data.resize(64 * 64 / 8);
-        for (int y = 0; y < 64; ++y)
-          for (int x = 0; x < 64; ++x)
-            if (state.data[y][x])
-              st.data[y * 8 + x / 8] |= 1 << (x % 8);
-        st.x = peer.second.first;
-        st.y = peer.second.second;
-        st.maxX = state.maxX;
-        st.maxY = state.maxY;
         ConwayProto proto;
         OStrm strm;
-        proto.ser(strm, st);
+        proto.ser(strm, game.getState(peer.second));
         peer.first->send(strm.str().data(), strm.str().size());
       }
     },

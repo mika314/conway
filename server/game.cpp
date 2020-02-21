@@ -68,22 +68,26 @@ void Game::process()
     std::cout << "Number of cells: " << state.size() << std::endl;
 }
 
-GameState Game::getState(int xx, int y) const
+proto::State Game::getState(const proto::ClientState &clientState) const
 {
-  GameState ret;
+  proto::State ret;
   ret.maxX = maxX;
   ret.maxY = maxY;
+  ret.x = clientState.x;
+  ret.y = clientState.y;
+  ret.w = clientState.w;
+  ret.h = clientState.h;
+  ret.data.resize((ret.w * ret.h + 7) / 8);
 
-  for (auto &row : ret.data)
-  {
-    ++y;
-    int x = xx;
-    for (auto &cell : row)
+  for (auto y = 0; y < ret.h; ++y)
+    for (auto x = 0; x < ret.w; ++x)
     {
-      cell = state.find(Vec2{x, y}) != std::end(state);
-      ++x;
+      const auto bit = (x + y * ret.w);
+      if (state.find(Vec2{x + ret.x, y + ret.y}) != std::end(state))
+        ret.data[bit / 8] |= (1u << (bit % 8));
+      else
+        ret.data[bit / 8] &= ~(1u << (bit % 8));
     }
-  }
   return ret;
 }
 

@@ -13,7 +13,7 @@ int main()
     ConwayProto proto;
     IStrm strm(buff, buff + sz);
     proto.deser(strm,
-                overloaded{[](const proto::Pos &) { std::clog << "pos" << std::endl; },
+                overloaded{[](const proto::ClientState &) { std::clog << "pos" << std::endl; },
                            [](const proto::State &) { std::clog << "state" << std::endl; }});
   };
   conn.onConn = []() { std::clog << "connected" << std::endl; };

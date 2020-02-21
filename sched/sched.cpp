@@ -20,6 +20,11 @@ auto Sched::process() -> void
   uv_run(&loop, UV_RUN_ONCE);
 }
 
+auto Sched::processNoWait() -> void
+{
+  uv_run(&loop, UV_RUN_NOWAIT);
+}
+
 auto Sched::regIdle(std::function<void()> &&func) -> void
 {
   if (!func)

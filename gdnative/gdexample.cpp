@@ -13,20 +13,8 @@ void GDExample::_register_methods()
   register_method("_ready", &GDExample::_ready);
 }
 
-GDExample::GDExample() : conn(sched, PublicKey, "localhost", 42069)
+GDExample::GDExample()
 {
-  conn.onConn = [this]() { isConnected = true; };
-  conn.onRecv = [this](const char *buff, size_t sz) {
-    {
-      std::ostringstream strm;
-      strm << "OnRecv: " << sz;
-      Godot::print(strm.str().c_str());
-    }
-    ConwayProto proto;
-    IStrm strm(buff, buff + sz);
-    proto.deser(strm, *this);
-  };
-  conn.onDisconn = [this]() { isConnected = false; };
 }
 
 GDExample::~GDExample()
@@ -46,7 +34,21 @@ void GDExample::_ready()
 
 void GDExample::_process(float delta)
 {
-  sched.process();
+  if (!conn)
+  {
+    conn = std::make_unique<Net::Conn>(sched, PublicKey, "localhost", 42069);
+    conn->onConn = [this]() { isConnected = true; };
+    conn->onRecv = [this](const char *buff, size_t sz) {
+      ConwayProto proto;
+      IStrm strm(buff, buff + sz);
+      proto.deser(strm, *this);
+    };
+    conn->onDisconn = [this]() {
+      isConnected = false;
+      conn = nullptr;
+    };
+  }
+  sched.processNoWait();
   auto dir = Vector3{};
   auto input = Input::get_singleton();
   if (input->is_action_pressed("ui_right"))
@@ -66,8 +68,8 @@ void GDExample::_process(float delta)
   {
     auto tmp = camera->get_translation();
     tmp += dir * CamSpeed * delta;
-    tmp.x += (maxX * 2 + 64 - tmp.x) * 0.5 * delta;
-    tmp.z += (maxY * 2 + 64 - tmp.z) * 0.5 * delta;
+    tmp.x += (maxX * 2 + w(camera->get_translation().y) - tmp.x) * 0.5 * delta;
+    tmp.z += (maxY * 2 + h(camera->get_translation().y) - tmp.z) * 0.5 * delta;
     camera->set_translation(tmp);
   }
 
@@ -89,20 +91,22 @@ void GDExample::_process(float delta)
 
   if (time > nextTime)
   {
-    proto::Pos pos;
-    pos.x = camera->get_translation().x / 2 - 32;
-    pos.y = camera->get_translation().z / 2 - 32;
+    proto::ClientState state;
+    state.w = w(camera->get_translation().y);
+    state.h = h(camera->get_translation().y);
+    state.x = camera->get_translation().x / 2 - state.w / 2;
+    state.y = camera->get_translation().z / 2 - state.h / 2;
     OStrm strm;
     ConwayProto proto;
-    proto.ser(strm, pos);
-    conn.send(strm.str().data(), strm.str().size());
+    proto.ser(strm, state);
+    conn->send(strm.str().data(), strm.str().size());
     nextTime += 0.25f;
   }
 
   time += delta;
 }
 
-void GDExample::operator()(const proto::Pos &)
+void GDExample::operator()(const proto::ClientState &)
 {
   Godot::print("Unexpected");
 }
@@ -113,21 +117,12 @@ void GDExample::operator()(const proto::State &state)
   auto tmpY = state.y;
   maxX = state.maxX;
   maxY = state.maxY;
-  auto tmp = state.data;
-  if (tmp.size() < 64 * 64 / 8)
-  {
-    std::ostringstream strm;
-    strm << "Arry is smaller than expected: " << tmp.size() << //
-      " state.x/y: " << state.x << "/" << state.y <<           //
-      " maxX/Y: " << state.maxX << "/" << state.maxY;
-    Godot::print(strm.str().c_str());
-    return;
-  }
   auto gridMap = static_cast<GridMap *>(get_node("GridMap"));
-  for (int xx = 0; xx < 64; ++xx)
-    for (int yy = 0; yy < 64; ++yy)
+  for (int xx = 0; xx < state.w; ++xx)
+    for (int yy = 0; yy < state.h; ++yy)
     {
-      if ((tmp[yy * 8 + xx / 8] & (1 << xx % 8)) == 0)
+      const auto bit = yy * state.w + xx;
+      if ((state.data[bit / 8] & (1 << bit % 8)) == 0)
         gridMap->set_cell_item(xx, 0, yy, 0);
       else
         gridMap->set_cell_item(xx, 0, yy, 1);
@@ -138,4 +133,14 @@ void GDExample::operator()(const proto::State &state)
     tmp.z = tmpY * 2;
     gridMap->set_translation(tmp);
   }
+}
+
+int GDExample::w(float y) const
+{
+  return y * 3 / 4;
+}
+
+int GDExample::h(float y) const
+{
+  return y * 3 / 8;
 }

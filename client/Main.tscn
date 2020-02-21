@@ -2,16 +2,15 @@
 
 [ext_resource path="res://gdexample.gdns" type="Script" id=1]
 [ext_resource path="res://cells.tres" type="MeshLibrary" id=2]
-
-[sub_resource type="Environment" id=1]
-ambient_light_color = Color( 0.596078, 0.596078, 0.596078, 1 )
+[ext_resource path="res://environment.tres" type="Environment" id=3]
 
 [node name="Main" type="Spatial"]
 script = ExtResource( 1 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 22.5689, 12.4725 )
-environment = SubResource( 1 )
+keep_aspect = 0
+environment = ExtResource( 3 )
 far = 8192.0
 
 [node name="SpotLight" type="SpotLight" parent="Camera"]
@@ -28,3 +27,6 @@ __meta__ = {
 }
 
 [node name="Spatial" type="Spatial" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( 3 )

@@ -3,7 +3,7 @@ set -x
 for bin in server gdnative cli_client; do
     cd $bin
     echo Entering directory \`$bin\'
-    coddle debug
+    coddle release || exit 1
     echo Leaving directory \`$bin\'
     cd ..
 done

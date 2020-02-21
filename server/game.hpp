@@ -1,6 +1,6 @@
 #pragma once
-#include "game_state.hpp"
 #include "vec2.hpp"
+#include <proto/proto.hpp>
 #include <unordered_set>
 
 class Game
@@ -8,7 +8,7 @@ class Game
 public:
   Game();
   void process();
-  GameState getState(int x, int y) const;
+  proto::State getState(const proto::ClientState&) const;
   int getCellsCount() const;
 
 private:

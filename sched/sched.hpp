@@ -10,6 +10,7 @@ public:
   Sched();
   ~Sched();
   auto process() -> void;
+  auto processNoWait() -> void;
   auto regIdle(std::function<void()> &&) -> void;
 
   using TimerCanceler = std::function<void()>;
